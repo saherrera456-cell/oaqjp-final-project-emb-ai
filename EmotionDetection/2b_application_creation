@@ -1,0 +1,4 @@
+>>> from EmotionDetection.emotion_detection import emotion_detector
+>>> emotion_detector("I love this new technology.")
+'{\n  "emotionPredictions": [\n    {\n      "emotion": {\n        "anger": 0.013148166,\n        "disgust": 0.0017188737,\n        "fear": 0.009228807,\n        "joy": 0.9728795,\n        "sadness": 0.054363243\n      },\n      "target": "",\n      "emotionMentions": [\n        {\n          "span": {\n            "begin": 0,\n            "end": 27,\n            "text": "I love this new technology."\n          },\n          "emotion": {\n            "anger": 0.013148166,\n            "disgust": 0.0017188737,\n            "fear": 0.009228807,\n            "joy": 0.9728795,\n            "sadness": 0.054363243\n          }\n        }\n      ]\n    }\n  ],\n  "producerId": {\n    "name": "Ensemble SVM ensemble",\n    "version": "0.0.1"\n  }\n}'
+>>>
