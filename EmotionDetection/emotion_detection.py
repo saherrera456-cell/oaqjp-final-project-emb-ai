@@ -2,30 +2,32 @@ import requests
 import json
 
 def emotion_detector(text_to_analyse):
-    """
-    Analiza el texto y devuelve un diccionario con las puntuaciones de las emociones
-    y la emoción dominante.
-    """
     url = 'https://sn-watson-emotion.labs.skills.network/v1/watson.runtime.nlp.v1/NlpService/EmotionPredict'
     header = {"grpc-metadata-mm-model-id": "emotion_aggregated-workflow_lang_en_stock"}
     myobj = { "raw_document": { "text": text_to_analyse } }
     response = requests.post(url, json = myobj, headers=header)
     
-    # Convertimos la respuesta de texto a un diccionario de Python
-    formatted_response = json.loads(response.text)
+    # Manejo de errores: Si el texto está en blanco o la API falla
+    if response.status_code == 400:
+        return {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
     
-    # Extraemos el conjunto de emociones de la respuesta
-    # Nota: Accedemos a la primera predicción del arreglo 'emotionPredictions'
+    # Si la petición es exitosa (código 200), procesamos normalmente
+    formatted_response = json.loads(response.text)
     emotions = formatted_response['emotionPredictions'][0]['emotion']
     
-    # Extraemos los valores individuales
     anger_score = emotions['anger']
     disgust_score = emotions['disgust']
     fear_score = emotions['fear']
     joy_score = emotions['joy']
     sadness_score = emotions['sadness']
     
-    # Creamos un diccionario con estos valores para encontrar el máximo
     emotion_list = {
         'anger': anger_score,
         'disgust': disgust_score,
@@ -34,11 +36,9 @@ def emotion_detector(text_to_analyse):
         'sadness': sadness_score
     }
     
-    # Calculamos la emoción con la puntuación más alta
     dominant_emotion = max(emotion_list, key=emotion_list.get)
     
-    # Construimos el diccionario de salida final requerido
-    result = {
+    return {
         'anger': anger_score,
         'disgust': disgust_score,
         'fear': fear_score,
@@ -46,5 +46,3 @@ def emotion_detector(text_to_analyse):
         'sadness': sadness_score,
         'dominant_emotion': dominant_emotion
     }
-    
-    return result
